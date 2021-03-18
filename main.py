@@ -40,17 +40,23 @@ class Join(QtWidgets.QMainWindow):
         curs = con.cursor()
         fio = curs.execute(
             """SELECT id FROM UserForm WHERE email = "{}" and password = "{}" """.format(Login,
-                                                                                         Password)).fetchall()[0][0]
-        print(fio)
+                                                                                         Password)).fetchall()
 
         if not fio:
-            self.ui.label_error.setText("Неверный логин или пароль")
-            self.ui.label_error.show()
-            return
-        else:
             try:
-                ex = curs.execute(f"""Select Branch, facultet, Groups from Students Where FIO = {fio}""").fetchall()
+                self.ui.label_error.setText("Неверный логин или пароль")
+                self.ui.label_error.show()
+                return
+            except Exception as ex:
+                print(ex)
+        else:
 
+            fio = curs.execute(
+                """SELECT id FROM UserForm WHERE email = "{}" and password = "{}" """.format(Login,
+                                                                                             Password)).fetchall()[0][0]
+
+            ex = curs.execute(f"""Select Branch, facultet, Groups from Students Where FIO = {fio}""").fetchall()[0]
+            try:
                 self.win = Main("DATABASE.db", ex)
                 self.close()
                 self.win.show()
@@ -66,12 +72,13 @@ class Main(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.con = sqlite3.connect(self.path)
         self.curs = self.con.cursor()
-        self.branch = self.curs.execute(f"""Select name FROM Branches Where id = {self.user[0]}""")
-        self.facultet = self.curs.execute(f"""Select name FROM Facultets Where id = {self.user[1]}""")
-        self.group = self.curs.execute(f"""Select name FROM Groups Where id = {self.user[2]}""")
+        self.branch = self.curs.execute(f"""Select name FROM Branches Where id = {self.user[0]}""").fetchall()[0][0]
+        self.facultet = self.curs.execute(f"""Select name FROM Facultets Where id = {self.user[1]}""").fetchall()[0][0]
+        self.group = self.curs.execute(f"""Select name FROM Groups Where id = {self.user[2]}""").fetchall()[0][0]
+        print(self.group, self.branch, self.facultet)
         self.lbl_branch.setText(self.branch)
         self.lbl_fuck.setText(self.facultet)
-        self.lbl_group.setText(self.group)
+        self.lbl_group.setText(str(self.group))
 
 
 if __name__ == "__main__":
