@@ -89,6 +89,37 @@ class Main(QMainWindow, Ui_MainWindow):
         except Exception as er:
             print(er)
 
+    def schedule(self):
+        try:
+            dt = self.curs.execute(f"""Select timetable from Groups where id = {self.user[2]}""")
+            self.shed = Example(dt)
+            self.shed.show()
+        except Exception as er:
+            print(er)
+
+
+class Example(QWidget):
+
+    def __init__(self, path):
+        self.path = path
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        hbox = QHBoxLayout(self)
+        pixmap = QtGui.QPixmap(self.path)
+
+        lbl = QLabel(self)
+        lbl.setPixmap(pixmap)
+
+        hbox.addWidget(lbl)
+        self.setLayout(hbox)
+
+        self.move(300, 200)
+        self.setWindowTitle('Photo')
+        self.show()
+
 
 class Contacts(QMainWindow, Ui_Contacts):
     def __init__(self, facultet):
