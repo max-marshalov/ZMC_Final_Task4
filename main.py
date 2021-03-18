@@ -66,6 +66,29 @@ class Join(QtWidgets.QMainWindow):
                 print(er)
 
 
+class Example(QWidget):
+
+    def __init__(self, path):
+        self.path = path
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        hbox = QHBoxLayout(self)
+        pixmap = QtGui.QPixmap(self.path)
+
+        lbl = QLabel(self)
+        lbl.setPixmap(pixmap)
+
+        hbox.addWidget(lbl)
+        self.setLayout(hbox)
+
+        self.move(300, 200)
+        self.setWindowTitle('Photo')
+        self.show()
+
+
 class Main(QMainWindow, Ui_MainWindow):
     def __init__(self, path, user):
         self.path = path
@@ -83,6 +106,57 @@ class Main(QMainWindow, Ui_MainWindow):
         self.lbl_group.setText(str(self.group))
         self.btn_info.clicked.connect(self.inf)
         self.btn_timetable.clicked.connect(self.schedule)
+
+        self.tableWidget.cellClicked.connect(self.show_photo)
+
+        self.update_data()
+        # Мы берём БВИ Мы берём БВИ Мы берём БВИ Мы берём БВИ Мы берём БВИ Мы берём БВИ Мы берём БВИ Мы берём БВИ
+        # Мы призёры Мы призёры Мы призёры АБП Мы призёры АБП Мы призёры АБП Мы призёры АБП Мы призёры АБП
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+        # Поле название команды обязательно для заполнения - призёры
+
+    def show_photo(self):
+        if self.tableWidget.currentColumn() != 5:
+            return
+        else:
+            self.path = self.tableWidget.item(self.tableWidget.currentRow(), 1).text().split()[0]
+            print(self.path)
+            self.ex = Example(f"Photos/{self.path}.jpg")
+            self.ex.show()
+
+    def update_data(self):
+        self.data = self.curs.execute(
+            """Select lesson, FIO, rang, profession, email from Teachers""").fetchall()
+        self.update_table()
+
+    def update_table(self):
+        self.tableWidget.setRowCount(0)
+
+        n = len(self.data)
+        self.tableWidget.setRowCount(n)
+        for i in range(n):
+            self.tableWidget.setItem(i, 0, QTableWidgetItem())
+            self.tableWidget.setItem(i, 1, QTableWidgetItem())
+            self.tableWidget.setItem(i, 2, QTableWidgetItem())
+            self.tableWidget.setItem(i, 3, QTableWidgetItem())
+            self.tableWidget.setItem(i, 4, QTableWidgetItem())
+            self.tableWidget.setItem(i, 5, QTableWidgetItem())
+
+            self.tableWidget.item(i, 0).setText(str(self.data[i][0]))
+            self.tableWidget.item(i, 1).setText(self.data[i][1])
+            self.tableWidget.item(i, 2).setText(str(self.data[i][2]))
+            self.tableWidget.item(i, 3).setText(self.data[i][3])
+            self.tableWidget.item(i, 4).setText(str(self.data[i][4]))
+            self.tableWidget.item(i, 5).setText("Открыть")
 
     def inf(self):
         try:
