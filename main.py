@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets, QtGui, QtCore
 import sqlite3
+from contacts import *
 from join import *
 from student_room import *
 import sys
@@ -79,6 +80,39 @@ class Main(QMainWindow, Ui_MainWindow):
         self.lbl_branch.setText(self.branch)
         self.lbl_fuck.setText(self.facultet)
         self.lbl_group.setText(str(self.group))
+        self.btn_info.clicked.connect(self.inf)
+
+    def inf(self):
+        try:
+            self.ex = Contacts(self.facultet)
+            self.ex.show()
+        except Exception as er:
+            print(er)
+
+
+class Contacts(QMainWindow, Ui_Contacts):
+    def __init__(self, facultet):
+        self.facultet = facultet
+        super(Contacts, self).__init__()
+        self.setupUi(self)
+        if self.facultet == 1:
+            self.lbl_decan.setText("""Декан - Пупкин Василий Эдуардович 
+(телефон 8 (800) 000-00-01, E-mail - pupkin.v.sgu@yandex.ru) 
+Зам. декана - Прекрасная Василиса Ивановна 
+(телефон 8 (800) 000-00-02, E-mail - prekrasnaya.v.sgu@yandex.ru) 
+Секретарь - Секретарев Дмитрий Борисович 
+(телефон 8 (800) 000-00-03, E-mail - sekretarev.d.sgu@yandex.ru) 
+Секретарь - Ухов Евгений Олегович 
+(телефон 8 (800) 000-00-04, E-mail - uhov.e.sgu@yandex.ru) 
+""")
+        elif self.facultet == 2:
+            self.lbl_decan.setText(""" Декан - Иванов Иван Иванович
+                                   (телефон 8 (800) 001-00-01, E-mail - ivanov.i.sgu@yandex.ru)
+            Зам. декана - Сидоров Сергей Петрович
+            (телефон 8 (800) 001-00-02, E-mail - sidorov.s.sgu@yandex.ru)
+            Секретарь - Петрова Ирина Викторовна
+            (телефон 8 (800) 001-00-03, E-mail - petrova.i.sgu@yandex.ru)
+            """)
 
 
 if __name__ == "__main__":
