@@ -57,6 +57,7 @@ class Join(QtWidgets.QMainWindow):
                                                                                              Password)).fetchall()[0][0]
 
             ex = curs.execute(f"""Select Branch, facultet, Groups from Students Where FIO = {fio}""").fetchall()[0]
+
             try:
                 self.win = Main("DATABASE.db", ex)
                 self.close()
