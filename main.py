@@ -40,17 +40,23 @@ class Join(QtWidgets.QMainWindow):
         curs = con.cursor()
         fio = curs.execute(
             """SELECT id FROM UserForm WHERE email = "{}" and password = "{}" """.format(Login,
-                                                                                         Password)).fetchall()[0][0]
-        ex = curs.execute(f"""Select Branch, facultet, Groups from Students Where FIO = {fio}""").fetchall()[0]
-        con.commit()
-        con.close()
-        if not fio:
-            self.ui.label_error.setText("Неверный логин или пароль")
-            self.ui.label_error.show()
-            return
-        else:
-            try:
+                                                                                         Password)).fetchall()
 
+        if not fio:
+            try:
+                self.ui.label_error.setText("Неверный логин или пароль")
+                self.ui.label_error.show()
+                return
+            except Exception as ex:
+                print(ex)
+        else:
+
+            fio = curs.execute(
+                """SELECT id FROM UserForm WHERE email = "{}" and password = "{}" """.format(Login,
+                                                                                             Password)).fetchall()[0][0]
+
+            ex = curs.execute(f"""Select Branch, facultet, Groups from Students Where FIO = {fio}""").fetchall()[0]
+            try:
                 self.win = Main("DATABASE.db", ex)
                 self.close()
                 self.win.show()
