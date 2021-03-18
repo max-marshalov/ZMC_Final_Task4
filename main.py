@@ -82,6 +82,7 @@ class Main(QMainWindow, Ui_MainWindow):
         self.lbl_fuck.setText(self.facultet)
         self.lbl_group.setText(str(self.group))
         self.btn_info.clicked.connect(self.inf)
+        self.btn_timetable.clicked.connect(self.schedule)
 
     def inf(self):
         try:
@@ -92,7 +93,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def schedule(self):
         try:
-            dt = self.curs.execute(f"""Select timetable from Groups where id = {self.user[2]}""")
+            dt = self.curs.execute(f"""Select timetable from Groups where id = {self.user[2]}""").fetchall()[0][0]
             self.shed = Example(dt)
             self.shed.show()
         except Exception as er:
